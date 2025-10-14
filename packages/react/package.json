@@ -1,0 +1,37 @@
+{
+  "name": "@web3-hooks/react",
+  "version": "0.0.1",
+  "type": "module",
+  "sideEffects": false,
+  "packageManager": "pnpm@9.12.3",
+  "scripts": {
+    "build": "tsup src/index.ts --dts --format esm,cjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "echo \"(todo)\"",
+    "test": "echo \"(todo)\""
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.56.0",
+    "@web3-hooks/core": "workspace:*",
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@web3-hooks/core": "workspace:*",
+    "react": "^19",
+    "react-dom": "^19",
+    "tsup": "^8.3.0",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.3"
+  }
+}

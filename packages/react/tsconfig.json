@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+      "jsx": "react",
+      "types": ["react", "react-dom"]
+  },
+  "extends": "../../tsconfig.base.json",
+  "include": ["src", "global.d.ts"]
+}

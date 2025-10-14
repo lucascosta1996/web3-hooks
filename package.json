@@ -1,0 +1,40 @@
+{
+  "name": "@lucascosta1996/web3-hooks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "packageManager": "pnpm@9.12.3",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r --filter ./packages/** run build",
+    "dev": "pnpm --filter @web3-hooks/examples-basic dev",
+    "typecheck": "pnpm -r --filter ./packages/** run typecheck",
+    "lint": "pnpm -r --filter ./packages/** run lint",
+    "test": "pnpm -r --filter ./packages/** run test",
+    "changeset": "changeset",
+    "release": "changeset version && pnpm i --no-frozen-lockfile && changeset publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucascosta1996/web3-hooks.git"
+  },
+  "keywords": [],
+  "author": "@lucascosta1996",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lucascosta1996/web3-hooks/issues"
+  },
+  "homepage": "https://github.com/lucascosta1996/web3-hooks#readme",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
+  "devDependencies": {
+    "@changesets/cli": "^2.27.9",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5.9.3"
+  }
+}
