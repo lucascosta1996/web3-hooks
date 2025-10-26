@@ -12,7 +12,8 @@
     "lint": "pnpm -r --filter ./packages/** run lint",
     "test": "pnpm -r --filter ./packages/** run test",
     "changeset": "changeset",
-    "release": "changeset version && pnpm i --no-frozen-lockfile && changeset publish"
+    "version-packages": "changeset version && pnpm install",
+    "release": "pnpm -r --filter \"@web3-hooks/*\" build && changeset publish"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
     "lib/**/*"
   ],
   "devDependencies": {
+    "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.27.9",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.0",

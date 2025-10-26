@@ -1,12 +1,14 @@
 {
   "name": "@web3-hooks/react",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
+  "private": false,
   "sideEffects": false,
   "packageManager": "pnpm@9.12.3",
   "scripts": {
     "build": "tsup src/index.ts --dts --format esm,cjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "pnpm run build",
     "lint": "echo \"(todo)\"",
     "test": "echo \"(todo)\""
   },
@@ -24,7 +26,7 @@
     "react": ">=18",
     "react-dom": ">=18",
     "@tanstack/react-query": "^5.0.0",
-    "@web3-hooks/core": "workspace:*"
+    "@web3-hooks/core": "0.1.0"
   },
   "devDependencies": {
     "@web3-hooks/core": "workspace:*",

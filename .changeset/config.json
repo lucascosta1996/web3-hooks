@@ -1,0 +1,11 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.0.4/schema.json",
+  "changelog": ["@changesets/changelog-github", { "repo": "lucascosta1996/web3-hooks" }],
+  "commit": false,
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": ["@web3-hooks/playground"],
+  "linked": [],
+  "fixed": []
+}

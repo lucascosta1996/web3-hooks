@@ -1,16 +1,24 @@
 {
   "name": "@web3-hooks/core",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
+  "private": false,
   "sideEffects": false,
   "packageManager": "pnpm@9.12.3",
-  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs" } },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup src/index.ts --dts --format esm,cjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "pnpm run build",
     "lint": "eslint .",
     "test": "vitest run"
   },
