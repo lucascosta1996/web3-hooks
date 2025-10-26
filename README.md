@@ -1,136 +1,224 @@
-# web3-hooks
 
-A modular **React hooks library** for interacting with **Web3 technologies** — designed for composability, framework-agnostic adapters, and seamless developer experience.
+# 🚀 Web3 Hooks — Development & Release Guide
 
-## Overview
+This guide explains how to **develop**, **version**, and **publish** packages in the **web3-hooks** monorepo.
 
-`web3-hooks` provides a unified, type-safe set of React hooks that make reading blockchain data and interacting with smart contracts effortless.  
-It’s organized as a **pnpm monorepo** with multiple workspaces:
+We use:
 
-```
-web3-hooks/
-├─ packages/
-│  ├─ core/                # Shared utilities and types
-│  ├─ adapter-evm-viem/    # EVM adapter using viemx
-│  └─ react/               # React hooks built on top of core + adapters
-└─ apps/
-   └─ playground/          # Next.js playground demo app
-```
-
-Each adapter can plug into the React layer to expose network-specific hooks (`useBlockNumber`, `useBalance`, etc).
+- PNPM Workspaces
+- Changesets for versioning and changelogs
+- NPM scoped packages under the **@web3-hooks/** organization
+- Automatic multi‑package publishing
 
 ---
 
-## Packages
+## 📦 Packages in This Monorepo
 
-| Package | Description |
-|----------|-------------|
-| **@web3-hooks/core** | Core interfaces, base client logic, and shared helpers |
-| **@web3-hooks/adapter-evm-viem** | EVM implementation powered by [`viem`](https://viem.sh) |
-| **@web3-hooks/react** | High-level React hooks and context providers |
-| **@web3-hooks/playground** | Next.js app demonstrating library usage |
-
----
-
-## Example Usage
-
-```tsx
-'use client'
-import {
-  Web3Provider,
-  useBlockNumber,
-  useChainId,
-  useGasPrice,
-  useBalance,
-} from '@web3-hooks/react'
-import { createEvmClient } from '@web3-hooks/adapter-evm-viem'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useState } from 'react'
-
-const client = createEvmClient({
-  rpcUrl: 'https://ethereum.publicnode.com',
-  chainId: 1,
-})
-
-export default function App() {
-  const [qc] = useState(() => new QueryClient())
-  return (
-    <QueryClientProvider client={qc}>
-      <Web3Provider client={client}>
-        <Demo />
-      </Web3Provider>
-    </QueryClientProvider>
-  )
-}
-
-function Demo() {
-  const chain = useChainId()
-  const block = useBlockNumber()
-  const gas = useGasPrice()
-  const bal = useBalance({ address: '0x0000000000000000000000000000000000000000' })
-
-  return (
-    <div className="p-6 font-sans space-y-2">
-      <h1 className="text-xl font-semibold">web3-hooks playground</h1>
-      <p>Chain ID: {chain.data}</p>
-      <p>Block: {block.data}</p>
-      <p>Gas Price: {gas.data?.gwei?.toFixed(2)} Gwei</p>
-      <p>Balance(0x0…): {bal.data?.ether} ETH</p>
-    </div>
-  )
-}
-```
+| Package | Description | Published Name |
+|--------|-------------|----------------|
+| Core Hooks | Base RPC & chain utilities | `@web3-hooks/core` |
+| React Hooks | React Query–powered hooks & providers | `@web3-hooks/react` |
+| EVM Adapter | Viem-based RPC adapter | `@web3-hooks/adapter-evm-viem` |
+| Preset Bundler | One‑install DX bundling all above | `@web3-hooks/preset-evm` |
+| Playground | Next.js example app (not published) | *(private)* |
 
 ---
 
-## Development
+# 🛠 Development Flow
 
-### Requirements
-- Node.js ≥ 20
-- pnpm ≥ 9
-- Corepack enabled
+> All commands run from the **repo root** unless noted.
 
-### Setup
+### 1) Prerequisites
+- **Node.js ≥ 20**
+- **pnpm ≥ 9** (via Corepack)
+- **Git**
+
 ```bash
 corepack enable
+node -v
+pnpm -v
+```
+
+### 2) Install dependencies
+```bash
 pnpm install
 ```
 
-### Build all packages
+### 3) Build everything
+```bash
+pnpm -r --filter "@web3-hooks/*" build
+```
+- Each package outputs to `dist/`
+- If a build fails, check that the package has a `tsconfig.json` extending `tsconfig.base.json`
+
+### 4) Run the Playground (Next.js)
+```bash
+pnpm -F @web3-hooks/playground dev
+# open http://localhost:3000
+```
+The playground consumes local workspace packages, so changes in `/packages/*` are reflected after a rebuild.
+
+### 5) Develop on a specific package
+```bash
+# core
+pnpm -F @web3-hooks/core build --watch
+
+# react
+pnpm -F @web3-hooks/react build --watch
+
+# adapter
+pnpm -F @web3-hooks/adapter-evm-viem build --watch
+```
+Then refresh the playground.
+
+### 6) Typecheck, Lint, Test
+```bash
+# typecheck all packages
+pnpm -r --filter "@web3-hooks/*" run typecheck
+
+# lint all packages (if configured)
+pnpm -r --filter "@web3-hooks/*" run lint
+
+# test (vitest) — if/when tests exist
+pnpm -r --filter "@web3-hooks/*" test
+```
+
+### 7) Adding a new hook (recommended flow)
+1. Implement in the right package:
+   - Reusable/shared types → `@web3-hooks/core`
+   - React hook & React Query integration → `@web3-hooks/react`
+   - Network/RPC specifics → `@web3-hooks/adapter-evm-viem`
+2. Export it from the package’s `src/index.ts`
+3. Rebuild: `pnpm -F <package> build`
+4. Use it in the playground, update docs/examples
+
+### 8) Creating a new package (e.g., preset or adapter)
+```
+packages/new-pkg/
+  src/index.ts
+  package.json
+  tsconfig.json
+```
+**package.json (template):**
+```json
+{
+  "name": "@web3-hooks/<name>",
+  "version": "0.0.0",
+  "private": false,
+  "type": "module",
+  "sideEffects": false,
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist", "README.md", "LICENSE"],
+  "publishConfig": { "access": "public" },
+  "scripts": {
+    "build": "tsup src/index.ts --dts --format esm,cjs",
+    "prepublishOnly": "pnpm run build"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18",
+    "@tanstack/react-query": "^5.0.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.0"
+  }
+}
+```
+**tsconfig.json (template):**
+```json
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "./dist",
+    "module": "ESNext",
+    "target": "ES2022",
+    "moduleResolution": "Bundler",
+    "skipLibCheck": true,
+    "strict": true
+  },
+  "include": ["src"]
+}
+```
+
+### 9) Common Dev Pitfalls & Fixes
+- **“No QueryClient set”** → Wrap app with `QueryClientProvider`
+- **Peer dependency duplication** → React/React Query must be **peerDependencies** in `@web3-hooks/react`
+- **`workspace:*` leaked to npm** → Always run `pnpm version-packages` before publish
+- **tsup “compilerOptions undefined”** → Missing package-level `tsconfig.json`
+- **Vite/Next showing stale code** → Ensure you’re running the correct app (`apps/playground`), and packages are rebuilt
+
+---
+
+# 📦 Versioning & Publishing Flow
+
+> Changesets controls releases across packages. Only packages with pending changes are published.
+
+## 1) Create a Changeset
+```bash
+pnpm changeset
+```
+- Select the packages you changed
+- Choose bump type: **patch**, **minor**, or **major**
+- Add a clear summary (used in CHANGELOG)
+
+## 2) Apply versions & update ranges
+```bash
+pnpm version-packages
+```
+This:
+- Updates versions in each `package.json`
+- Rewrites internal ranges to semver
+- Generates/updates CHANGELOGs
+- Refreshes the lockfile
+
+## 3) Build all publishable packages
 ```bash
 pnpm -r --filter "@web3-hooks/*" build
 ```
 
-### Run the Next.js playground
+## 4) Publish (dry run first recommended)
 ```bash
-pnpm -F @web3-hooks/playground dev
+pnpm release --dry-run
+pnpm release
 ```
-
-Open [http://localhost:3000](http://localhost:3000).
+- Publishes only changed packages
+- Uses `publishConfig.access=public`
+- Tags & changelogs are created automatically
 
 ---
 
-## Testing
-You can enable tests later in each package:
+## 🔢 Choosing Bump Types (SemVer)
 
-```bash
-pnpm -r test
-```
+| Type | Use when | Examples |
+|------|----------|----------|
+| **patch** | Bug fix or internal improvement (no API change) | “Fix `useBalanceOf` precision” |
+| **minor** | Backwards-compatible feature | “Add `useGasPrice` hook” |
+| **major** | Breaking API change | “Rename `Web3Provider` prop / change return types” |
+
+**Tip:** Prefer *minor* during active development; reserve *major* for deliberate breaking changes.
 
 ---
 
-## CI/CD
+## 🤖 (Optional) CI Automation (GitHub Actions)
 
-GitHub Actions pipeline (`.github/workflows/ci.yml`):
+Create `.github/workflows/release.yml` to open a Release PR and auto-publish on merge:
 
 ```yaml
-name: ci
+name: Release
 on:
   push:
-  pull_request:
+    branches: [main]
 jobs:
-  ci:
+  release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
     env:
       CI: true
       NEXT_TELEMETRY_DISABLED: 1
@@ -139,35 +227,57 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: corepack enable
+      - run: |
+          corepack enable
+          corepack prepare pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]") --activate
+      - uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: pnpm-store-${{ runner.os }}-
       - run: pnpm install --frozen-lockfile
-      - run: pnpm -r typecheck
       - run: pnpm -r --filter "@web3-hooks/*" build
-      - run: pnpm -F @web3-hooks/playground build
+      - uses: changesets/action@v1
+        with:
+          publish: pnpm release
+          title: "chore(release): version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
----
-
-## Tech Stack
-
-- **TypeScript** — full type safety across packages  
-- **pnpm workspaces** — monorepo management  
-- **Next.js 15** — app playground  
-- **React Query** — async state for blockchain queries  
-- **viem** — low-level EVM RPC adapter  
-- **tsup** — fast TypeScript bundling  
+Add `NPM_TOKEN` (Automation Token) in repo secrets.
 
 ---
 
-## Roadmap
+## 📘 Script Reference (root)
 
-- [ ] Add ERC-20 + ERC-721 helper hooks (`useErc20`, `useNFTMetadata`)
-- [ ] Add more network adapters (Solana, Starknet)
-- [ ] Add testing utilities (`mockProvider`, `renderHookWithWeb3`)
-- [ ] Publish to npm (`@web3-hooks/*`)
+| Command | What it does |
+|--------|---------------|
+| `pnpm install` | Install all workspace deps |
+| `pnpm -r --filter "@web3-hooks/*" build` | Build all publishable packages |
+| `pnpm changeset` | Create a changeset interactively |
+| `pnpm version-packages` | Apply changesets (bump versions & ranges) |
+| `pnpm release` | Build + publish changed packages |
+| `pnpm release --dry-run` | Simulate publishing without uploading |
+| `pnpm -F @web3-hooks/playground dev` | Run Next.js playground |
 
 ---
 
-## License
+## 📝 Notes & Conventions
 
-MIT © 2025 [Lucas Costa](https://github.com/lucascosta1996)
+- **Peer deps**: `react`, `react-dom`, `@tanstack/react-query`, and `viem` stay as peers to avoid duplicate instances.
+- **Exports**: prefer clean subpath exports for DX (`exports` field).
+- **Files**: use `"files": ["dist", "README.md", "LICENSE"]` to keep published tarballs lean.
+- **Consistency**: keep versions aligned when desired (e.g., preset depends on the latest released versions).
+- **Docs**: update package READMEs and the docs site alongside changes.
+
+---
+
+## 📬 Support / Discussions
+
+- GitHub: https://github.com/web3-hooks/web3-hooks
+- Discussions: https://github.com/web3-hooks/web3-hooks/discussions
+
+---
+

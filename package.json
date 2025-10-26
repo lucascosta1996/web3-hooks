@@ -1,7 +1,7 @@
 {
-  "name": "@lucascosta1996/web3-hooks",
+  "name": "@web3-hooks/web3-hooks",
   "version": "1.0.0",
-  "description": "",
+  "description": "A modular **React hooks library** for interacting with **Web3 technologies** — designed for composability, framework-agnostic adapters, and seamless developer experience.",
   "main": "./lib/index.js",
   "packageManager": "pnpm@9.12.3",
   "private": true,
@@ -39,5 +39,19 @@
     "@types/react-dom": "^19",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "eslint": "^9.37.0",
+    "eslint-config-next": "^15.5.5",
+    "eslint-import-resolver-node": "^0.3.9",
+    "eslint-import-resolver-typescript": "^3.10.1",
+    "eslint-module-utils": "^2.12.1",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-scope": "^8.4.0",
+    "eslint-visitor-keys": "^4.2.1",
+    "prettier": "^2.8.8"
   }
 }

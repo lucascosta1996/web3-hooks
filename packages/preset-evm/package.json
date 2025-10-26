@@ -1,0 +1,56 @@
+{
+  "name": "@web3-hooks/preset-evm",
+  "version": "0.1.1",
+  "private": false,
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js",
+      "require": "./dist/react.cjs"
+    },
+    "./adapter-evm": {
+      "types": "./dist/adapter-evm.d.ts",
+      "import": "./dist/adapter-evm.js",
+      "require": "./dist/adapter-evm.cjs"
+    },
+    "./core": {
+      "types": "./dist/core.d.ts",
+      "import": "./dist/core.js",
+      "require": "./dist/core.cjs"
+    }
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18",
+    "@tanstack/react-query": "^5.0.0",
+    "viem": "^2.0.0"
+  },
+  "dependencies": {
+    "@web3-hooks/core": "^0.1.1",
+    "@web3-hooks/react": "^0.1.1",
+    "@web3-hooks/adapter-evm-viem": "^0.1.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts src/react.ts src/adapter-evm.ts src/core.ts --dts --format esm,cjs",
+    "prepublishOnly": "pnpm run build"
+  }
+}

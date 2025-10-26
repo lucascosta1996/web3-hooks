@@ -1,9 +1,12 @@
 {
   "name": "@web3-hooks/adapter-evm-viem",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "type": "module",
   "private": false,
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "packageManager": "pnpm@9.12.3",
   "exports": {
     ".": {
@@ -16,7 +19,7 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "peerDependencies": {
-    "@web3-hooks/core": "0.1.0",
+    "@web3-hooks/core": "0.1.1",
     "viem": "^2.12.0"
   },
   "devDependencies": {

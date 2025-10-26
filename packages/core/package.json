@@ -1,9 +1,12 @@
 {
   "name": "@web3-hooks/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "private": false,
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "packageManager": "pnpm@9.12.3",
   "exports": {
     ".": {

@@ -1,4 +1,4 @@
-# @web3-hooks/react
+# @web3-hooks/preset-evm
 
 ## 0.1.1
 
@@ -7,9 +7,11 @@
 - Reset versions
 
 - Updated dependencies []:
+  - @web3-hooks/adapter-evm-viem@0.1.1
+  - @web3-hooks/react@0.1.1
   - @web3-hooks/core@0.1.1
 
-## 2.0.0
+## 0.3.0
 
 ### Minor Changes
 
@@ -18,15 +20,12 @@
 ### Patch Changes
 
 - Updated dependencies []:
+  - @web3-hooks/adapter-evm-viem@2.0.0
+  - @web3-hooks/react@2.0.0
   - @web3-hooks/core@0.2.0
 
-## 1.0.0
+## 0.2.0
 
 ### Minor Changes
 
-- Creating packages publishing automation
-
-### Patch Changes
-
-- Updated dependencies []:
-  - @web3-hooks/core@0.1.0
+- Add package for installing all 3 packages at once
