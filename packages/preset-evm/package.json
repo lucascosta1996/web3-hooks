@@ -1,6 +1,6 @@
 {
   "name": "@web3-hooks/preset-evm",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -42,9 +42,9 @@
     "viem": "^2.0.0"
   },
   "dependencies": {
-    "@web3-hooks/core": "^0.1.1",
-    "@web3-hooks/react": "^0.1.1",
-    "@web3-hooks/adapter-evm-viem": "^0.1.1"
+    "@web3-hooks/core": "^0.2.0",
+    "@web3-hooks/react": "^1.0.0",
+    "@web3-hooks/adapter-evm-viem": "^1.0.0"
   },
   "publishConfig": {
     "access": "public"

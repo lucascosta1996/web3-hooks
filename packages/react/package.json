@@ -1,6 +1,6 @@
 {
   "name": "@web3-hooks/react",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "type": "module",
   "private": false,
   "sideEffects": false,
@@ -29,7 +29,7 @@
     "react": ">=18",
     "react-dom": ">=18",
     "@tanstack/react-query": "^5.0.0",
-    "@web3-hooks/core": "0.1.1"
+    "@web3-hooks/core": "0.2.0"
   },
   "devDependencies": {
     "@web3-hooks/core": "workspace:*",

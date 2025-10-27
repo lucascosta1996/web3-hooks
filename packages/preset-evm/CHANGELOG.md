@@ -1,5 +1,18 @@
 # @web3-hooks/preset-evm
 
+## 0.2.0
+
+### Minor Changes
+
+- Add README files
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @web3-hooks/adapter-evm-viem@1.0.0
+  - @web3-hooks/core@0.2.0
+  - @web3-hooks/react@1.0.0
+
 ## 0.1.1
 
 ### Patch Changes

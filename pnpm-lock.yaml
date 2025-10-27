@@ -168,13 +168,13 @@ importers:
         version: 5.90.3(react@19.1.0)
       '@web3-hooks/adapter-evm-viem':
         specifier: ^1.0.0
-        version: 1.0.0(@web3-hooks/core@0.1.0)(viem@2.38.2(typescript@5.9.3))
+        version: 1.0.0(@web3-hooks/core@0.2.0)(viem@2.38.2(typescript@5.9.3))
       '@web3-hooks/core':
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.2.0
+        version: 0.2.0
       '@web3-hooks/react':
         specifier: ^1.0.0
-        version: 1.0.0(@tanstack/react-query@5.90.3(react@19.1.0))(@web3-hooks/core@0.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 1.0.0(@tanstack/react-query@5.90.3(react@19.1.0))(@web3-hooks/core@0.2.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react:
         specifier: '>=18'
         version: 19.1.0
@@ -1360,8 +1360,8 @@ packages:
       '@web3-hooks/core': 0.1.0
       viem: ^2.12.0
 
-  '@web3-hooks/core@0.1.0':
-    resolution: {integrity: sha512-HvtcxWCU9ZLsRq+izvaOH0DQfO4D+YKRFGI0cXmlG/lywD+uWRJ3FT76rJwYUhEw0XTjkDveeiXMZOU2olysoQ==}
+  '@web3-hooks/core@0.2.0':
+    resolution: {integrity: sha512-ihiT5om55xdgYMD1VOzx8RL5shoDgPWHZwHOyIx07mwiYfYLNmnrlzxcmABY8GPojkC6tlhIbBwTcyFXDTQA9A==}
 
   '@web3-hooks/react@1.0.0':
     resolution: {integrity: sha512-QIFW6oMuN6Fg+yX23mPr1b5stYAKo5wAQndPQYKCPpKilmNs4vINPqAlQWMo/EWuori2f3Ra36Ef2RU29Wk7mg==}
@@ -4175,17 +4175,17 @@ snapshots:
       loupe: 3.2.1
       tinyrainbow: 1.2.0
 
-  '@web3-hooks/adapter-evm-viem@1.0.0(@web3-hooks/core@0.1.0)(viem@2.38.2(typescript@5.9.3))':
+  '@web3-hooks/adapter-evm-viem@1.0.0(@web3-hooks/core@0.2.0)(viem@2.38.2(typescript@5.9.3))':
     dependencies:
-      '@web3-hooks/core': 0.1.0
+      '@web3-hooks/core': 0.2.0
       viem: 2.38.2(typescript@5.9.3)
 
-  '@web3-hooks/core@0.1.0': {}
+  '@web3-hooks/core@0.2.0': {}
 
-  '@web3-hooks/react@1.0.0(@tanstack/react-query@5.90.3(react@19.1.0))(@web3-hooks/core@0.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@web3-hooks/react@1.0.0(@tanstack/react-query@5.90.3(react@19.1.0))(@web3-hooks/core@0.2.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@tanstack/react-query': 5.90.3(react@19.1.0)
-      '@web3-hooks/core': 0.1.0
+      '@web3-hooks/core': 0.2.0
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
