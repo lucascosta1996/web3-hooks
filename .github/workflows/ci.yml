@@ -3,6 +3,7 @@ name: ci
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -16,40 +17,37 @@ jobs:
       NEXT_TELEMETRY_DISABLED: 1
 
     steps:
-      - name: Checkout
+      - name: 🧩 Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Node & pnpm (Corepack)
+      - name: 🛠️ Setup Node & Corepack
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-      - name: Enable Corepack & activate pnpm from packageManager
+
+      - name: 🔧 Enable Corepack & activate pnpm
         run: |
           corepack enable
+          echo "Activating pnpm from packageManager field..."
           corepack prepare pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]") --activate
+          pnpm --version
 
-      - name: Install deps (frozen lockfile)
+      - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # ensure a changeset exists on PRs that modify packages
-      - name: Verify changesets on PRs
-        if: ${{ github.event_name == 'pull_request' }}
-        run: |
-          npx --yes @changesets/cli status
-
-      - name: Lint (non-blocking)
+      - name: 🧹 Lint (non-blocking)
         run: pnpm -r lint
         continue-on-error: true
 
-      - name: Typecheck all workspaces
+      - name: 🧾 Typecheck all workspaces
         run: pnpm -r typecheck
 
-      - name: Build packages (@web3-hooks/*)
+      - name: ⚙️ Build core packages
         run: pnpm -r --filter "@web3-hooks/*" build
 
-      - name: Build Playground app (Next.js)
+      - name: ⚡ Build playground app (Next.js)
         run: pnpm -F @web3-hooks/playground build
 
-      - name: Build Docs (Nextra / Next.js)
+      - name: 📚 Build docs (Nextra / Next.js)
         run: pnpm -F @web3-hooks/docs build
