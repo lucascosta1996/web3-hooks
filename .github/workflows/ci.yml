@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      CI: true
+      NEXT_TELEMETRY_DISABLED: 1
 
     steps:
       - name: 🧩 Checkout repository
@@ -17,15 +20,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'pnpm'
 
-      # ✅ This action *installs pnpm globally* and makes it executable
-      - name: 🧰 Setup pnpm
+      # ✅ Let the action read the version from package.json "packageManager"
+      - name: 🧰 Setup pnpm (read version from package.json)
         uses: pnpm/action-setup@v4
         with:
-          version: 9
-          run_install: false
+          run_install: false   # we install in the next step
 
-      - name: 📦 Install dependencies
+      - name: 🔎 Print versions (debug)
+        run: |
+          node -v
+          pnpm -v
+
+      - name: 📦 Install dependencies (frozen)
         run: pnpm install --frozen-lockfile
 
       - name: 🧹 Lint (non-blocking)
