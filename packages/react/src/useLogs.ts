@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useWeb3Client } from './context'
 
 type Hex = `0x${string}`
-export type Log = {
+export interface Log {
   address: Hex
   topics: Hex[]
   data: Hex

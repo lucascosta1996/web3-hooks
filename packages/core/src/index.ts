@@ -17,9 +17,9 @@ export interface WalletConnector {
   disconnect(): Promise<void>;
   getAddress(): Address | null;
   getChainId(): ChainId | null;
-  on(event: 'accountsChanged' | 'chainChanged' | 'disconnect', cb: (...a: any[]) => void): void;
+  on(event: 'accountsChanged' | 'chainChanged' | 'disconnect', cb: (...a: unknown[]) => void): void;
 }
 
-export type Web3Client = { rpc: RpcClient; tx: TxClient; wallet?: WalletConnector };
+export interface Web3Client { rpc: RpcClient; tx: TxClient; wallet?: WalletConnector }
 
 export function createWeb3Client(input: Web3Client): Web3Client { return input; }

@@ -5,11 +5,16 @@
   "main": "./lib/index.js",
   "packageManager": "pnpm@9.12.3",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "pnpm -r --filter ./packages/** run build",
     "dev": "pnpm --filter @web3-hooks/examples-basic dev",
     "typecheck": "pnpm -r --filter ./packages/** run typecheck",
     "lint": "pnpm -r --filter ./packages/** run lint",
+    "lint-all": "eslint .",
+    "lint:fix": "eslint packages apps --fix",
+    "lint:cache": "eslint packages apps --cache",
+    "lint:cache:fix": "eslint packages apps --cache --fix",
     "test": "pnpm -r --filter ./packages/** run test",
     "changeset": "changeset",
     "version-packages": "changeset version && pnpm install",
@@ -33,25 +38,27 @@
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.27.9",
+    "@eslint/js": "^9.39.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "eslint": "^9.37.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "prettier": "^2.8.8",
     "tsup": "^8.5.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.2"
   },
   "dependencies": {
-    "eslint": "^9.37.0",
     "eslint-config-next": "^15.5.5",
     "eslint-import-resolver-node": "^0.3.9",
     "eslint-import-resolver-typescript": "^3.10.1",
     "eslint-module-utils": "^2.12.1",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-scope": "^8.4.0",
-    "eslint-visitor-keys": "^4.2.1",
-    "prettier": "^2.8.8"
+    "eslint-visitor-keys": "^4.2.1"
   }
 }

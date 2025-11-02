@@ -5,7 +5,7 @@ import { renderHook } from '@testing-library/react'
 import { Web3Provider } from './context'
 import { useBlockNumber } from './useBlockNumber'
 
-function wrapper({ children }: any) {
+function wrapper({ children }: never) {
   const qc = new QueryClient()
   const mockClient = {
     rpc: { request: async () => '0x10' },
@@ -13,7 +13,7 @@ function wrapper({ children }: any) {
   }
   return (
     <QueryClientProvider client={qc}>
-      <Web3Provider client={mockClient as any}>{children}</Web3Provider>
+      <Web3Provider client={mockClient as never}>{children}</Web3Provider>
     </QueryClientProvider>
   )
 }

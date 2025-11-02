@@ -1,3 +1,5 @@
+/* eslint-disable no-empty */
+/* eslint-disable no-control-regex */
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3Client } from './context'
 
