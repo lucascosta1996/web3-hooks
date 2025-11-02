@@ -1,5 +1,5 @@
 
-# 🚀 Web3 Hooks — Development & Release Guide
+# Web3 Hooks — Development & Release Guide
 
 This guide explains how to **develop**, **version**, and **publish** packages in the **web3-hooks** monorepo.
 
@@ -12,7 +12,7 @@ We use:
 
 ---
 
-## 📦 Packages in This Monorepo
+## Packages in This Monorepo
 
 | Package | Description | Published Name |
 |--------|-------------|----------------|
@@ -24,7 +24,7 @@ We use:
 
 ---
 
-# 🛠 Development Flow
+# Development Flow
 
 > All commands run from the **repo root** unless noted.
 
@@ -153,7 +153,7 @@ packages/new-pkg/
 
 ---
 
-# 📦 Versioning & Publishing Flow
+# Versioning & Publishing Flow
 
 > Changesets controls releases across packages. Only packages with pending changes are published.
 
@@ -191,7 +191,7 @@ pnpm release
 
 ---
 
-## 🔢 Choosing Bump Types (SemVer)
+## Choosing Bump Types (SemVer)
 
 | Type | Use when | Examples |
 |------|----------|----------|
@@ -203,7 +203,7 @@ pnpm release
 
 ---
 
-## 🤖 (Optional) CI Automation (GitHub Actions)
+## (Optional) CI Automation (GitHub Actions)
 
 Create `.github/workflows/release.yml` to open a Release PR and auto-publish on merge:
 
@@ -250,7 +250,7 @@ Add `NPM_TOKEN` (Automation Token) in repo secrets.
 
 ---
 
-## 📘 Script Reference (root)
+## Script Reference (root)
 
 | Command | What it does |
 |--------|---------------|
@@ -264,7 +264,7 @@ Add `NPM_TOKEN` (Automation Token) in repo secrets.
 
 ---
 
-## 📝 Notes & Conventions
+## Notes & Conventions
 
 - **Peer deps**: `react`, `react-dom`, `@tanstack/react-query`, and `viem` stay as peers to avoid duplicate instances.
 - **Exports**: prefer clean subpath exports for DX (`exports` field).
@@ -274,7 +274,7 @@ Add `NPM_TOKEN` (Automation Token) in repo secrets.
 
 ---
 
-## 📬 Support / Discussions
+## Support / Discussions
 
 - GitHub: https://github.com/web3-hooks/web3-hooks
 - Discussions: https://github.com/web3-hooks/web3-hooks/discussions
