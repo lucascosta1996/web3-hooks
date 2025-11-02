@@ -6,3 +6,20 @@
 .nx-prose h2 {
   font-size: 2rem !important;
 }
+
+.nextra-footer {
+  display: none !important;
+}
+
+footer:not(#site-footer) {
+  display: none !important;
+}
+
+#site-footer { padding: 24px 0; }
+
+@media (prefers-color-scheme: dark) {
+  #site-footer { border-top: 1px solid rgba(255,255,255,0.12); }
+}
+@media (prefers-color-scheme: light) {
+  #site-footer { border-top: 1px solid rgba(0,0,0,0.08); }
+}

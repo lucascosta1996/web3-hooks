@@ -5,6 +5,15 @@ const bitCount = Bitcount_Prop_Single({
   weight: ['400'], // e.g., bold for logo
 });
 
+function MyFooter() {
+  return (
+    <div style={{ fontSize: 12, opacity: 0.7 }}>
+      © {new Date().getFullYear()} <a href="https://lucascosta.dev">Lucas Costa</a>.
+      Released under the <a href="https://github.com/lucascosta1996/web3-hooks/blob/main/LICENSE">MIT License</a>.
+    </div>
+  )
+}
+
 export default {
   logo: <i className={bitCount.className}>Web3-Hooks</i>,
   project: { link: 'https://github.com/lucascosta1996/web3-hooks' },
@@ -44,6 +53,7 @@ export default {
 
     };
   },
+
   head: (
     <>
       <meta name="theme-color" content="#000000" />
@@ -61,6 +71,5 @@ export default {
         content="Composable React Hooks for Web3 development — EVM, Viem, and beyond."
       />
     </>
-  ),
-  footer: { text: 'MIT © Web3-Hooks Contributors' },
+  )
 };
