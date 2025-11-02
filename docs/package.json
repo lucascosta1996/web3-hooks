@@ -1,0 +1,16 @@
+{
+  "name": "@web3-hooks/docs",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^15.5.5",
+    "nextra": "^3.2.4",
+    "nextra-theme-docs": "^3.2.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
+}

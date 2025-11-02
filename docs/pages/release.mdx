@@ -1,0 +1,222 @@
+# Release Guide
+
+This document explains how to publish and version all **web3-hooks** packages using **Changesets** and **PNPM workspaces**.
+
+> ⚠️ **For Maintainers Only**  
+> The release workflow described here is intended for core maintainers.  
+> Contributors should **not** run these commands — instead, open a Pull Request.  
+> Maintainers will handle version bumps and npm publishing after merging PRs.
+
+---
+
+## Overview
+
+Each package inside `/packages` is versioned **independently**.  
+Changesets track version bumps and changelogs automatically.
+
+| Package | Description |
+|----------|--------------|
+| `@web3-hooks/core` | Core logic, types, and schema for Web3 requests |
+| `@web3-hooks/react` | React Query layer and hooks integration |
+| `@web3-hooks/adapter-evm-viem` | EVM adapter using Viem |
+| `@web3-hooks/preset-evm` | Bundles all of the above in a single install |
+
+---
+
+## Release Workflow
+
+### 1. Create a Changeset
+
+Whenever you add a new feature or fix a bug, run:
+
+```bash
+pnpm changeset
+```
+
+Follow the CLI prompts to select:
+- Which packages changed
+- The version type (patch / minor / major)
+- A short summary for the changelog
+
+This generates a new file inside `.changeset/` like:
+
+```
+.changeset/
+  calm-elephants-add.md
+```
+
+---
+
+### 2. Apply Version Bumps
+
+Once you’ve merged your PRs into `main`, apply versioning changes:
+
+```bash
+pnpm version-packages
+```
+
+This command:
+- Reads all `.changeset` entries
+- Updates versions in each `package.json`
+- Updates dependent versions automatically
+- Writes changelog updates to each package
+
+Example output:
+
+```
+  All files have been updated. Review them and commit at your leisure
+```
+
+> After this, commit your version bumps and changelog changes.
+
+```bash
+git add .
+git commit -m "chore: version packages"
+```
+
+---
+
+### 3. Build Before Publishing
+
+Before publishing, rebuild all packages to ensure updated artifacts exist:
+
+```bash
+pnpm -r build
+```
+
+This runs the build pipeline (`tsup`) for each package and generates `dist/` folders.
+
+---
+
+### 4. Publish to npm
+
+Finally, publish all packages:
+
+```bash
+pnpm release
+```
+
+This runs the following script defined in the root `package.json`:
+
+```bash
+pnpm -r --filter "@web3-hooks/*" build && changeset publish
+```
+
+> Make sure you are logged into npm under the correct organization scope:
+
+```bash
+npm login
+npm whoami
+```
+
+If you encounter scope-related issues (e.g., `E404 Scope not found`), verify that your scope (`@web3-hooks`) is **public** on npm.
+
+---
+
+## Example Release Flow
+
+```bash
+git pull origin main
+pnpm install
+pnpm changeset
+pnpm version-packages
+pnpm -r build
+pnpm release
+```
+
+---
+
+## Versioning Policy
+
+We follow **Semantic Versioning (SemVer)**:
+
+| Type | Example | Meaning |
+|------|----------|----------|
+| **Patch** | `1.0.0 → 1.0.1` | Fixes or small internal changes |
+| **Minor** | `1.0.0 → 1.1.0` | New backward-compatible features |
+| **Major** | `1.0.0 → 2.0.0` | Breaking changes in API or behavior |
+
+---
+
+## Dry Run (Test Before Publish)
+
+You can simulate a release without publishing to npm:
+
+```bash
+pnpm release --dry-run
+```
+
+This shows which packages would be published and their next versions.
+
+---
+
+## Useful Commands
+
+| Command | Description |
+|----------|-------------|
+| `pnpm changeset` | Create a new changeset entry |
+| `pnpm version-packages` | Apply version changes and generate changelogs |
+| `pnpm -r build` | Build all packages |
+| `pnpm release` | Publish all packages via Changesets |
+| `pnpm release --dry-run` | Simulate a release without publishing |
+
+---
+
+## Reset Versions (if needed)
+
+If versions ever get out of sync, you can manually reset all package versions:
+
+```bash
+pnpm changeset
+# Choose all packages → patch
+# Summary: Reset versions
+
+pnpm version-packages
+```
+
+Then commit the version bump and rebuild.
+
+---
+
+## Pro Tips
+
+- Run all builds before publishing (`pnpm -r build`)
+- Always push your commits before running `pnpm release`
+- Don’t delete the `.changeset` folder — it’s required for version tracking
+- Use **dry runs** often when testing your npm configuration
+- You can view all versions of a published package:
+
+```bash
+pnpm view @web3-hooks/react versions --json
+```
+
+---
+
+## Automating Releases (Optional)
+
+You can automate versioning and publishing through GitHub Actions by adding a CI workflow:
+
+```yaml
+name: release
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org/"
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm -r build
+      - run: pnpm release
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+---

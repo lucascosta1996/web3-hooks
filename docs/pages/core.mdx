@@ -1,0 +1,111 @@
+# @web3-hooks/core
+
+The `@web3-hooks/core` package provides the **foundation layer** of the web3-hooks ecosystem.  
+It defines the shared logic, types, and interfaces that connect different blockchain adapters (like Viem, WalletConnect, or custom APIs) to the React layer.
+
+This package is **framework-agnostic** — it contains no React code.  
+Its goal is to standardize the flow of Web3 operations (RPC calls, provider state, request lifecycle, etc.) across all adapters.
+
+---
+
+## Installation
+
+```bash
+pnpm add @web3-hooks/core
+```
+
+This package is automatically included when installing presets like:
+
+```bash
+pnpm add @web3-hooks/preset-evm
+```
+
+---
+
+## Architecture Overview
+
+The **Core** package is the backbone of the web3-hooks system.
+
+| Layer | Role |
+|--------|------|
+| `core` | Provides types, interfaces, and core utilities |
+| `react` | Adds React Query integration on top of `core` |
+| `adapter-*` | Implements actual blockchain logic (e.g. Viem, Solana) |
+
+Core abstracts the data model and request structure, ensuring all adapters can communicate seamlessly with the React layer.
+
+---
+
+## Example: Creating a Client
+
+Adapters rely on core primitives to create clients.
+
+```ts
+import { createClient } from "@web3-hooks/core";
+
+export const client = createClient({
+  request: async ({ method, params }) => {
+    // Adapter-specific implementation
+    return fetch("https://ethereum.publicnode.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
+    }).then((res) => res.json());
+  },
+});
+```
+
+This creates a lightweight and extendable client for JSON-RPC communication.
+
+---
+
+## Key Features
+
+- **Framework-agnostic** (no React, no DOM)
+- **Lightweight** (\<10KB)
+- **Composable** with multiple adapters
+- **Unified API** for different blockchain environments
+- **Typed RPC** and request schema system
+
+---
+
+## Core Exports
+
+| Export | Type | Description |
+|--------|------|--------------|
+| `createClient` | Function | Creates a new Web3 client |
+| `Web3Client` | Type | Interface representing the client structure |
+| `createQueryKey` | Utility | Generates deterministic React Query keys |
+| `normalizeResponse` | Utility | Standardizes adapter responses |
+
+---
+
+## Used By
+
+- [`@web3-hooks/react`](./react) → Provides React Query wrappers.
+- [`@web3-hooks/adapter-evm-viem`](./adapter-evm-viem) → Implements EVM RPC using Viem.
+- [`@web3-hooks/preset-evm`](./preset-evm) → Combines all three for ready-to-use Web3 setup.
+
+---
+
+## Example Usage (with Adapter)
+
+```ts
+import { createClient } from "@web3-hooks/core";
+import { viemAdapter } from "@web3-hooks/adapter-evm-viem";
+
+const client = createClient(viemAdapter({
+  rpcUrl: "https://ethereum.publicnode.com",
+}));
+```
+
+---
+
+## When to Use Core
+
+You’d use `@web3-hooks/core` directly when:
+- Building **new adapters** for non-EVM chains (e.g., Solana, Starknet)
+- Creating **custom RPC integrations**
+- Extending the **data flow layer** for advanced features
+
+---

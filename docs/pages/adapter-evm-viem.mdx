@@ -1,0 +1,143 @@
+# @web3-hooks/adapter-evm-viem
+
+The `@web3-hooks/adapter-evm-viem` package provides a **Viem-based implementation** for interacting with EVM-compatible blockchains (Ethereum, Polygon, Base, etc.) inside the `web3-hooks` ecosystem.
+
+It connects `@web3-hooks/core` with the EVM RPC layer using Viem as the transport and data abstraction layer.
+
+---
+
+## Installation
+
+```bash
+pnpm add @web3-hooks/adapter-evm-viem viem
+```
+
+You’ll also need the React integration and query provider to use hooks:
+
+```bash
+pnpm add @web3-hooks/react @tanstack/react-query react react-dom
+```
+
+---
+
+## Creating a Viem Client
+
+```tsx
+import { createEvmClient } from "@web3-hooks/adapter-evm-viem";
+
+const client = createEvmClient({
+  rpcUrl: "https://ethereum.publicnode.com",
+  chainId: 1, // Ethereum Mainnet
+});
+```
+
+This creates a **Viem-powered client** that handles RPC calls, network info, and provider state.
+
+---
+
+## Integration with React
+
+Use the created client inside your `Web3Provider`.
+
+```tsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Web3Provider } from "@web3-hooks/react";
+import { createEvmClient } from "@web3-hooks/adapter-evm-viem";
+
+const queryClient = new QueryClient();
+const client = createEvmClient({
+  rpcUrl: "https://ethereum.publicnode.com",
+  chainId: 1,
+});
+
+export default function App({ children }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Web3Provider client={client}>{children}</Web3Provider>
+    </QueryClientProvider>
+  );
+}
+```
+
+---
+
+## Example Usage
+
+```tsx
+import { useBlockNumber, useBalance } from "@web3-hooks/react";
+
+function Example() {
+  const { data: blockNumber } = useBlockNumber();
+  const { data: balance } = useBalance("0x1234...");
+
+  return (
+    <div>
+      <p>Block number: {blockNumber}</p>
+      <p>Balance: {balance} ETH</p>
+    </div>
+  );
+}
+```
+
+---
+
+## How It Works
+
+| Layer | Package | Responsibility |
+|--------|----------|----------------|
+| **Core** | `@web3-hooks/core` | Standardizes request schema and types |
+| **Adapter** | `@web3-hooks/adapter-evm-viem` | Implements JSON-RPC methods using Viem |
+| **React** | `@web3-hooks/react` | Binds data to React Query and components |
+
+Viem provides stable RPC abstractions and optimized requests for EVM-compatible chains.
+
+---
+
+## Example: Custom Chain
+
+You can easily connect to any EVM-compatible chain by changing the RPC endpoint and chain ID:
+
+```tsx
+const client = createEvmClient({
+  rpcUrl: "https://polygon.llamarpc.com",
+  chainId: 137, // Polygon Mainnet
+});
+```
+
+---
+
+## Supported Features
+
+- EVM RPC calls (eth_blockNumber, eth_getBalance, etc.)
+- Chain ID and network detection
+- Batch and cached queries via React Query
+- Extendable client configuration
+- Compatible with any EVM-compatible network
+
+---
+
+## Extending the Adapter
+
+You can create new adapters by following the same structure:
+
+```ts
+import { createAdapter } from "@web3-hooks/core";
+
+export const myCustomAdapter = createAdapter({
+  request: async ({ method, params }) => {
+    // Your custom JSON-RPC logic here
+  },
+});
+```
+
+This makes it possible to integrate non-Viem or even non-EVM clients while reusing the same hooks.
+
+---
+
+## Related Docs
+
+- [Core](./core)
+- [React Hooks](./react)
+- [Preset EVM](./preset-evm)
+
+---

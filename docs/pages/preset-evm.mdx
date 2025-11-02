@@ -1,0 +1,112 @@
+# @web3-hooks/preset-evm
+
+The `@web3-hooks/preset-evm` package is the easiest way to get started with the **web3-hooks** ecosystem.
+
+It bundles together:
+- `@web3-hooks/core`
+- `@web3-hooks/react`
+- `@web3-hooks/adapter-evm-viem`
+
+So you can start using hooks immediately with minimal setup.
+
+---
+
+## Installation
+
+```bash
+pnpm add @web3-hooks/preset-evm react react-dom @tanstack/react-query viem
+```
+
+This preset automatically configures:
+- An **EVM RPC client** (via Viem)
+- A **React Query provider**
+- A **Web3Provider** context for managing blockchain state
+
+---
+
+## Creating a Client
+
+```tsx
+import { createEvmClient } from "@web3-hooks/preset-evm";
+
+const client = createEvmClient({
+  rpcUrl: "https://ethereum.publicnode.com",
+  chainId: 1,
+});
+```
+
+This creates a Viem-powered client instance ready for use inside `Web3Provider`.
+
+---
+
+## Provider Setup
+
+```tsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Web3Provider } from "@web3-hooks/preset-evm";
+
+const queryClient = new QueryClient();
+
+export default function App({ children }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Web3Provider client={client}>{children}</Web3Provider>
+    </QueryClientProvider>
+  );
+}
+```
+
+---
+
+## Example Hooks
+
+```tsx
+import { useChainId, useBlockNumber } from "@web3-hooks/preset-evm";
+
+export default function Example() {
+  const { data: chainId } = useChainId();
+  const { data: blockNumber } = useBlockNumber();
+
+  return (
+    <div>
+      <p>Connected to chain {chainId}</p>
+      <p>Latest block: {blockNumber}</p>
+    </div>
+  );
+}
+```
+
+---
+
+## Under the Hood
+
+| Layer | Package | Responsibility |
+|--------|----------|----------------|
+| **Core** | `@web3-hooks/core` | Shared types, logic, and request interfaces |
+| **Adapter** | `@web3-hooks/adapter-evm-viem` | EVM RPC implementation via Viem |
+| **React** | `@web3-hooks/react` | React Query integration + state management |
+
+---
+
+## Extending the Preset
+
+You can extend the preset for custom RPC endpoints, wallets, or chains.
+
+```tsx
+const client = createEvmClient({
+  rpcUrl: "https://polygon.llamarpc.com",
+  chainId: 137,
+});
+```
+
+You can also build new presets for other ecosystems (e.g. Solana, Cosmos, etc.) while reusing the same `@web3-hooks/core` logic.
+
+---
+
+## Related Docs
+
+- [Core](./core)
+- [React Hooks](./react)
+- [Adapter (EVM/Viem)](./adapter-evm-viem)
+
+---

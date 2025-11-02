@@ -1,0 +1,124 @@
+# @web3-hooks/react
+
+The `@web3-hooks/react` package provides the **React integration layer** for all web3-hooks packages.
+
+It connects React Query to blockchain data streams via adapters and clients from `@web3-hooks/core`, giving developers a simple and declarative API for Web3 interactions.
+
+---
+
+## Installation
+
+```bash
+pnpm add @web3-hooks/react react react-dom @tanstack/react-query
+```
+
+You’ll also need a compatible adapter (e.g., Viem-based EVM adapter):
+
+```bash
+pnpm add @web3-hooks/adapter-evm-viem viem
+```
+
+---
+
+## Setup
+
+Before using any hook, wrap your app with both **React Query** and **Web3Provider**:
+
+```tsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Web3Provider } from "@web3-hooks/react";
+import { createEvmClient } from "@web3-hooks/adapter-evm-viem";
+
+const queryClient = new QueryClient();
+const client = createEvmClient({
+  rpcUrl: "https://ethereum.publicnode.com",
+  chainId: 1,
+});
+
+export default function App({ children }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Web3Provider client={client}>{children}</Web3Provider>
+    </QueryClientProvider>
+  );
+}
+```
+
+---
+
+## Example Hooks
+
+### `useChainId()`
+
+Returns the currently connected chain ID.
+
+```tsx
+import { useChainId } from "@web3-hooks/react";
+
+export default function Example() {
+  const { data: chainId } = useChainId();
+  return <p>Connected to chain {chainId}</p>;
+}
+```
+
+### `useBlockNumber()`
+
+Subscribes to the latest block number.
+
+```tsx
+import { useBlockNumber } from "@web3-hooks/react";
+
+function BlockNumber() {
+  const { data: blockNumber } = useBlockNumber();
+  return <p>Block number: {blockNumber}</p>;
+}
+```
+
+### `useBalance(address)`
+
+Fetches the ETH balance for a given address.
+
+```tsx
+import { useBalance } from "@web3-hooks/react";
+
+function Balance({ address }) {
+  const { data, isLoading } = useBalance(address);
+  if (isLoading) return <p>Loading...</p>;
+  return <p>Balance: {data} ETH</p>;
+}
+```
+
+---
+
+## Key Responsibilities
+
+| Layer | Responsibility |
+|--------|----------------|
+| **React Query integration** | Uses React Query to cache and synchronize blockchain data |
+| **Context management** | Manages Web3 context (client, provider, chain, etc.) |
+| **Declarative hooks** | Provides ready-to-use hooks like `useBalance`, `useBlockNumber`, `useReadContract` |
+
+---
+
+## Custom Hooks
+
+You can build your own hooks on top of the Web3 context:
+
+```tsx
+import { useWeb3Client } from "@web3-hooks/react";
+
+export function useGasPrice() {
+  const client = useWeb3Client();
+  return client.getGasPrice();
+}
+```
+
+---
+
+## Related Docs
+
+- [Core](./core)
+- [Adapter (EVM/Viem)](./adapter-evm-viem)
+- [Preset EVM](./preset-evm)
+
+---

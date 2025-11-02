@@ -1,0 +1,96 @@
+# Web3-Hooks
+## Overview
+
+A **modular React hooks library** for Web3 development — designed for composability, framework-agnostic adapters, and a seamless developer experience.
+
+Web3 Hooks provides a unified way to **read from and interact with blockchain data** using familiar React patterns. It focuses on **extensibility**, allowing you to connect to different blockchain clients, networks, and technologies through small, focused packages.
+
+Web3 Hooks is structured around three core layers:
+
+| Layer | Description |
+|--------|-------------|
+| **Core** | Defines the base client, request lifecycle, and type-safe RPC architecture — completely framework-agnostic. |
+| **Adapters** | Provide implementations for specific ecosystems (e.g. EVM chains via Viem, Solana, etc.). |
+| **React** | Builds on Core and Adapters to offer a composable React Hooks interface powered by React Query. |
+
+Together, they create a system that is **simple to use**, **powerful to extend**, and **agnostic to specific chains or frameworks**.
+
+---
+
+## Installation
+
+Install the preset for a one-step experience:
+
+```bash
+pnpm add @web3-hooks/preset-evm react react-dom @tanstack/react-query viem
+```
+
+---
+
+## Quick Start
+
+```tsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Web3Provider, createEvmClient, useChainId, useBlockNumber } from "@web3-hooks/preset-evm";
+
+const queryClient = new QueryClient();
+const client = createEvmClient({
+  rpcUrl: "https://ethereum.publicnode.com",
+  chainId: 1,
+});
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Web3Provider client={client}>
+        <Example />
+      </Web3Provider>
+    </QueryClientProvider>
+  );
+}
+
+function Example() {
+  const { data: chainId } = useChainId();
+  const { data: blockNumber } = useBlockNumber();
+
+  return (
+    <div>
+      <p>Chain ID: {chainId}</p>
+      <p>Block Number: {blockNumber}</p>
+    </div>
+  );
+}
+```
+
+---
+
+## Packages
+
+| Package | Description |
+|----------|--------------|
+| [`@web3-hooks/core`](https://www.npmjs.com/package/@web3-hooks/core) | Framework-agnostic abstractions for Web3 clients |
+| [`@web3-hooks/adapter-evm-viem`](https://www.npmjs.com/package/@web3-hooks/adapter-evm-viem) | EVM + Viem-based implementation |
+| [`@web3-hooks/react`](https://www.npmjs.com/package/@web3-hooks/react) | React hooks for stateful blockchain queries |
+| [`@web3-hooks/preset-evm`](https://www.npmjs.com/package/@web3-hooks/preset-evm) | All-in-one preset for fast setup |
+
+---
+
+## Philosophy
+
+- **Composable**: Mix and match adapters or build your own.
+- **Framework-agnostic**: Core doesn’t depend on React.
+- **Type-safe**: Built with TypeScript for strong DX.
+- **Performant**: React Query handles caching and syncing.
+
+---
+
+## Learn More
+
+- [Getting Started](./getting-started)
+- [Preset EVM](./preset-evm)
+- [Core](./core)
+- [React Hooks](./react)
+- [Adapter (EVM/Viem)](./adapter-evm-viem)
+- [Releases](./release)
+
+---

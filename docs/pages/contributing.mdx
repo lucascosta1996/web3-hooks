@@ -1,0 +1,210 @@
+# Contributing Guide
+
+Welcome to the **web3-hooks** project — an open-source modular library for building **Web3 React hooks** with composable, framework-agnostic adapters.  
+This guide explains how to contribute effectively, from setup to publishing new releases.
+
+---
+
+## Project Overview
+
+The repository uses a **PNPM monorepo** with multiple packages:
+
+```
+/apps
+  └── playground      → Example Next.js app for local testing
+/packages
+  ├── core            → Core logic and RPC abstraction layer
+  ├── react           → React Query integration and hooks
+  ├── adapter-evm-viem → Viem adapter for EVM-compatible chains
+  └── preset-evm      → All-in-one preset combining the above packages
+/docs
+  └── ...             → Nextra-based documentation website
+```
+
+---
+
+## Development Setup
+
+### 1. Clone & Install
+
+```bash
+git clone https://github.com/web3-hooks/web3-hooks.git
+cd web3-hooks
+pnpm install
+```
+
+### 2. Run the Playground
+
+```bash
+pnpm -F @web3-hooks/playground dev
+```
+
+This runs the **Next.js example app** using the locally linked packages.
+
+### 3. Build All Packages
+
+```bash
+pnpm -r build
+```
+
+This runs each package’s build pipeline (using `tsup`), generating `dist/` directories for `esm`, `cjs`, and `dts` outputs.
+
+---
+
+## Development Flow
+
+### Make Changes
+Work inside one of the `/packages` folders. For example:
+
+```bash
+cd packages/react
+```
+
+### Type Check & Lint
+
+```bash
+pnpm typecheck
+pnpm lint
+```
+
+### Preview Build Locally
+
+To ensure compatibility across packages:
+
+```bash
+pnpm -r build
+pnpm -F @web3-hooks/playground dev
+```
+
+---
+
+## Creating a Changeset
+
+Before merging new features or fixes, create a **changeset** to version the update:
+
+```bash
+pnpm changeset
+```
+
+Then follow the prompts:
+
+- Choose which packages to include
+- Select version bump type (patch / minor / major)
+- Write a short description (used in changelogs)
+
+This will create a `.changeset/*.md` file describing your update.
+
+---
+
+## Release Flow
+
+After your changes are merged into `main`, version and publish the packages.
+
+### 1. Version All Packages
+
+```bash
+pnpm version-packages
+```
+
+This command:
+- Applies all pending changesets
+- Updates `package.json` versions across packages
+- Writes changelogs
+- Installs new dependency versions across workspace
+
+### 2. Build Before Publishing
+
+```bash
+pnpm -r build
+```
+
+### 3. Publish to npm
+
+```bash
+pnpm release
+```
+
+This runs:
+
+```bash
+pnpm -r --filter "@web3-hooks/*" build && changeset publish
+```
+
+> Make sure you are logged in to npm with publishing rights under the **@web3-hooks** scope:
+> ```bash
+> npm login
+> npm whoami
+> ```
+
+---
+
+## Versioning Policy
+
+| Type | Example | Meaning |
+|------|----------|----------|
+| **Patch** | 1.0.1 → 1.0.2 | Fixes or internal refactors |
+| **Minor** | 1.0.0 → 1.1.0 | Backward-compatible features |
+| **Major** | 1.0.0 → 2.0.0 | Breaking changes or new API contracts |
+
+---
+
+## Testing Your Changes Locally
+
+When developing adapters or hooks, link your package locally in the example playground:
+
+```bash
+pnpm -F @web3-hooks/react build --watch
+pnpm -F @web3-hooks/playground dev
+```
+
+Changes will automatically propagate via PNPM’s workspace symlinks.
+
+---
+
+## Pull Request Guidelines
+
+1. Fork and create a new branch from `main`:
+   ```bash
+   git checkout -b feat/new-hook
+   ```
+2. Write clear and concise commits.
+3. Ensure type checks, builds, and tests pass.
+4. Add a Changeset for your modification:
+   ```bash
+   pnpm changeset
+   ```
+5. Open a PR and describe your changes.
+
+---
+
+## Adding a New Hook
+
+If you’re adding a new hook to `@web3-hooks/react`:
+
+- Define the core logic (RPC calls) in `@web3-hooks/core` if needed.
+- Integrate caching/state via React Query in `@web3-hooks/react`.
+- Add an example usage in the `playground` app.
+- Document it in `/docs` as a new `.mdx` page.
+
+---
+
+## Tips for Contributors
+
+- Keep hooks **pure** and **declarative**.
+- Avoid importing Viem directly from `react` or `core` — use adapters instead.
+- Always use `async`/`await` for RPC calls.
+- Add JSDoc to exported hooks and utilities.
+
+---
+
+## Community
+
+Join our discussions or suggest new hooks in the GitHub repo:
+ [web3-hooks on GitHub](https://github.com/web3-hooks/web3-hooks)
+
+We welcome contributions for:
+- New blockchain adapters (e.g., Solana, Base, Starknet)
+- Custom React hooks
+- Documentation improvements
+
+---

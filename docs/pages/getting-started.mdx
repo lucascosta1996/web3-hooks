@@ -1,0 +1,84 @@
+# First steps
+
+Welcome to **web3-hooks** — a modular React hooks library for seamless Web3 integration.
+
+This guide walks you through the basic setup and helps you get your first blockchain query running in under 2 minutes.
+
+---
+
+## Installation
+
+You can install the full preset (recommended) to get everything you need for EVM-compatible networks:
+
+```bash
+pnpm add @web3-hooks/preset-evm react react-dom @tanstack/react-query viem
+```
+
+Alternatively, install packages individually:
+
+```bash
+pnpm add @web3-hooks/core @web3-hooks/react @web3-hooks/adapter-evm-viem
+```
+
+---
+
+## Setup
+
+Add providers for React Query and Web3:
+
+```tsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Web3Provider, createEvmClient } from "@web3-hooks/preset-evm";
+
+const queryClient = new QueryClient();
+const client = createEvmClient({
+  rpcUrl: "https://ethereum.publicnode.com",
+  chainId: 1,
+});
+
+export default function App({ children }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Web3Provider client={client}>{children}</Web3Provider>
+    </QueryClientProvider>
+  );
+}
+```
+
+---
+
+## Example: Fetching Chain ID
+
+```tsx
+import { useChainId } from "@web3-hooks/preset-evm";
+
+export default function Example() {
+  const { data: chainId, isLoading } = useChainId();
+
+  if (isLoading) return <p>Loading...</p>;
+  return <p>Connected to chain {chainId}</p>;
+}
+```
+
+---
+
+## Available Hooks
+
+| Hook | Description |
+|------|--------------|
+| `useChainId()` | Get the current chain ID |
+| `useBlockNumber()` | Get the latest block number |
+| `useBalance(address)` | Get the ETH balance for an address |
+| `useSendTransaction()` | Send a transaction |
+| `useReadContract()` | Call a contract read method |
+
+---
+
+## Learn More
+
+- [Preset EVM](./preset-evm)
+- [Core](./core)
+- [React Hooks](./react)
+- [Adapter (EVM/Viem)](./adapter-evm-viem)
+
+---
