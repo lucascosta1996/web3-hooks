@@ -11,6 +11,12 @@
     "noUncheckedIndexedAccess": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@web3-hooks/core": ["packages/core/src/index.ts"],
+      "@web3-hooks/react": ["packages/react/src/index.ts"],
+      "@web3-hooks/adapter-evm-viem": ["packages/adapter-evm-viem/src/index.ts"]
+    }
   }
 }
