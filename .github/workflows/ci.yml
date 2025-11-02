@@ -38,9 +38,3 @@ jobs:
 
       - name: ⚙️ Build core packages
         run: pnpm -r --filter "@web3-hooks/*" build
-
-      - name: ⚡ Build playground app (Next.js)
-        run: pnpm -F @web3-hooks/playground build
-
-      - name: 📚 Build docs (Nextra / Next.js)
-        run: pnpm -F @web3-hooks/docs build

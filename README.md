@@ -208,42 +208,46 @@ pnpm release
 Create `.github/workflows/release.yml` to open a Release PR and auto-publish on merge:
 
 ```yaml
-name: Release
+name: ci
+
 on:
   push:
-    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      id-token: write
-    env:
-      CI: true
-      NEXT_TELEMETRY_DISABLED: 1
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: 🧩 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🧱 Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: |
-          corepack enable
-          corepack prepare pnpm@$(node -p "require('./package.json').packageManager.split('@')[1]") --activate
-      - uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: pnpm-store-${{ runner.os }}-
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm -r --filter "@web3-hooks/*" build
-      - uses: changesets/action@v1
-        with:
-          publish: pnpm release
-          title: "chore(release): version packages"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          cache: 'npm'
+
+      # ✅ Install pnpm manually (works on all GitHub runners)
+      - name: 🧰 Install pnpm
+        run: npm install -g pnpm@9.12.3
+
+      - name: 🔍 Verify pnpm installation
+        run: pnpm -v
+
+      - name: 📦 Install dependencies (frozen)
+        run: pnpm install --frozen-lockfile
+
+      - name: 🧹 Lint (non-blocking)
+        run: pnpm -r lint
+        continue-on-error: true
+
+      - name: 🧾 Typecheck all workspaces
+        run: pnpm -r typecheck
+
+      - name: ⚙️ Build core packages
+        run: pnpm -r --filter "@web3-hooks/*" build
 ```
 
 Add `NPM_TOKEN` (Automation Token) in repo secrets.
